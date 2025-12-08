@@ -1,12 +1,11 @@
 from datetime import date, timedelta
 
-from fastapi import APIRouter, status, Request
-from asyncer import asyncify
+from fastapi import APIRouter, status, Request, BackgroundTasks
 from loguru import logger
 
 from schemas.shared import APIResponse
-from services.data_extraction.download_metadata import extract_and_store_dhis2_metadata
-from services.data_extraction.download_historical_data import extract_and_store_historical_data
+from services.data_extraction.download_metadata import extract_and_store_dhis2_metadata_in_bg
+from services.data_extraction.download_historical_data import extract_and_store_historical_data_in_bg
 
 def create_data_extraction_router() -> APIRouter:
     """
@@ -24,13 +23,11 @@ def create_data_extraction_router() -> APIRouter:
             "and stores it in the configured database."
         )
     )
-    async def download_metadata(request: Request) -> APIResponse:
+    async def download_metadata(request: Request, bg_tasks: BackgroundTasks) -> APIResponse:
         trace_id = request.state.trace_id
         logger.info(f"[{trace_id}] Downloading metadata from DHIS2")
 
-        # Use `asyncify` to run the synchronous `extract_and_store_dhis2_metadata`
-        # function asynchronously without blocking the event loop.
-        message = await asyncify(extract_and_store_dhis2_metadata)(trace_id)
+        message = await extract_and_store_dhis2_metadata_in_bg(trace_id, bg_tasks)
         return message
 
     @router.post(
@@ -44,12 +41,12 @@ def create_data_extraction_router() -> APIRouter:
     )
     async def download_historical_data(
             request: Request,
-            start_date: date = (date.today() - timedelta(days=30)).strftime("%Y-%m-%d"),
-            end_date: date = date.today().strftime("%Y-%m-%d"),
+            bg_tasks: BackgroundTasks,
+            start_date: date = date.today() - timedelta(days=30),
+            end_date: date = date.today(),
     ) -> APIResponse:
         trace_id = request.state.trace_id
-        message = await asyncify(extract_and_store_historical_data)(trace_id, start_date, end_date)
+        message = await extract_and_store_historical_data_in_bg(trace_id, start_date, end_date, bg_tasks)
         return message
-
 
     return router

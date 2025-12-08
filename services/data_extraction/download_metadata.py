@@ -1,6 +1,6 @@
-import os
 import time
 
+from fastapi import BackgroundTasks
 from loguru import logger
 
 from core.env_config import env_config
@@ -13,14 +13,14 @@ from schemas.shared import APIResponse
 
 def extract_and_store_dhis2_metadata(trace_id: str) -> APIResponse:
     """
-    Extract DHIS2 data_extraction objects (organisation units, data elements, and indicators)
+    Extract DHIS2 metadata objects (organisation units, data elements, and indicators)
     and save them into a relational database.
 
     This function:
     1. Loads required environment variables.
-    2. Downloads data_extraction from DHIS2 using API helper functions.
+    2. Downloads metadata from DHIS2 using API helper functions.
     3. Measures the total extraction time.
-    4. Stores each data_extraction DataFrame into the database using `save_df_to_db()`.
+    4. Stores each metadata DataFrame into the database using `save_df_to_db()`.
 
     Logs
     ----
@@ -36,11 +36,11 @@ def extract_and_store_dhis2_metadata(trace_id: str) -> APIResponse:
         FP_DB_URL = env_config.FP_DB_URL
 
 
-        logger.info("Starting DHIS2 data_extraction extraction...")
+        logger.info("Starting DHIS2 metadata extraction...")
 
         start_time = time.time()
 
-        # --- Download data_extraction from DHIS2 ---
+        # --- Download metadata from DHIS2 ---
         logger.info("Downloading organisation units...")
         organisation_units_df = get_organisation_units(
             DHIS2_BASE_URL, DHIS2_USERNAME, DHIS2_PASSWORD
@@ -60,7 +60,7 @@ def extract_and_store_dhis2_metadata(trace_id: str) -> APIResponse:
         elapsed = time.time() - start_time
         logger.info(f"Metadata extraction completed in {elapsed:.2f} seconds.")
 
-        # --- Store data_extraction into DB ---
+        # --- Store metadata into DB ---
         logger.info("Saving organisation units to database...")
         save_df_to_db(organisation_units_df, FP_DB_URL, "organisation_units", "replace")
 
@@ -70,18 +70,29 @@ def extract_and_store_dhis2_metadata(trace_id: str) -> APIResponse:
         logger.info("Saving indicators to database...")
         save_df_to_db(indicators_df, FP_DB_URL, "indicators", "replace")
 
-        msg = "All data_extraction successfully saved to the database."
+        msg = "All metadata successfully saved to the database."
         logger.success(msg)
         return APIResponse(success=True, message=msg, trace_id=trace_id, data=None)
 
     except Exception as e:
-        logger.exception(f"Failed during data_extraction extraction or storage: {e}")
+        logger.exception(f"Failed during metadata extraction or storage: {e}")
         return APIResponse(
             success=False,
             message="Metadata extraction or storage failed. Check your logs",
             trace_id=trace_id,
             data=None,
         )
+
+
+async def extract_and_store_dhis2_metadata_in_bg(trace_id: str, bg_tasks: BackgroundTasks) -> APIResponse:
+    bg_tasks.add_task(extract_and_store_dhis2_metadata, trace_id)
+
+    return APIResponse(
+        success=True,
+        message="Task accepted. Processing in progress.",
+        data=None,
+        trace_id=trace_id,
+    )
 
 
 if __name__ == "__main__":
