@@ -1,1 +1,1 @@
-from routes.metadata import create_metadata_router as metadata_router
+from routes.data_extraction import create_data_extraction_router as metadata_router

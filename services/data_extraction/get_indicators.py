@@ -1,14 +1,15 @@
 import os
-import requests
 import polars as pl
 from loguru import logger
 from dotenv import load_dotenv
 from typing import Optional
 
+from services.helpers import make_api_call
+
 
 def get_indicators(base_url: str, username: str, password: str) -> Optional[pl.DataFrame]:
     """
-    Fetch DHIS2 indicators metadata and return it as a Polars DataFrame.
+    Fetch DHIS2 indicators data_extraction and return it as a Polars DataFrame.
 
     Parameters
     ----------
@@ -22,7 +23,7 @@ def get_indicators(base_url: str, username: str, password: str) -> Optional[pl.D
     Returns
     -------
     Optional[pl.DataFrame]
-        A Polars DataFrame containing indicators metadata, or None if parsing fails.
+        A Polars DataFrame containing indicators data_extraction, or None if parsing fails.
 
     Raises
     ------
@@ -33,15 +34,7 @@ def get_indicators(base_url: str, username: str, password: str) -> Optional[pl.D
     logger.info(f"Requesting indicators from DHIS2: {url}")
 
     # --- API request ---
-    try:
-        response = requests.get(url, auth=(username, password))
-    except requests.RequestException as e:
-        raise RuntimeError(f"Network error while requesting indicators: {e}")
-
-    if response.status_code != 200:
-        raise RuntimeError(
-            f"Failed to retrieve indicators. Status: {response.status_code} | Response: {response.text}"
-        )
+    response = make_api_call(url, username, password)
 
     logger.success("Indicators successfully retrieved.")
 

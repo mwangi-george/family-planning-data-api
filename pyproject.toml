@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "asyncer>=0.0.11",
+    "connectorx>=0.4.4",
     "fastapi[standard]>=0.123.10",
     "loguru>=0.7.3",
     "pandas>=2.3.3",

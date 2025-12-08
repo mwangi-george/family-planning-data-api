@@ -1,0 +1,55 @@
+from datetime import date, timedelta
+
+from fastapi import APIRouter, status, Request
+from asyncer import asyncify
+from loguru import logger
+
+from schemas.shared import APIResponse
+from services.data_extraction.download_metadata import extract_and_store_dhis2_metadata
+from services.data_extraction.download_historical_data import extract_and_store_historical_data
+
+def create_data_extraction_router() -> APIRouter:
+    """
+    Creates a FastAPI router for DHIS2 data_extraction operations.
+    """
+
+    router = APIRouter(prefix="/data-extraction", tags=["Data Extraction"])
+
+    @router.post(
+        path="/download-metadata",
+        summary="Download and store DHIS2 metadata",
+        status_code=status.HTTP_201_CREATED,
+        description=(
+            "Downloads DHIS2 metadata (indicators, data elements, and organisation units) "
+            "and stores it in the configured database."
+        )
+    )
+    async def download_metadata(request: Request) -> APIResponse:
+        trace_id = request.state.trace_id
+        logger.info(f"[{trace_id}] Downloading metadata from DHIS2")
+
+        # Use `asyncify` to run the synchronous `extract_and_store_dhis2_metadata`
+        # function asynchronously without blocking the event loop.
+        message = await asyncify(extract_and_store_dhis2_metadata)(trace_id)
+        return message
+
+    @router.post(
+        path="/download-historical-data",
+        summary="Download and store historical data from DHIS2",
+        description=(
+            "Downloads historical consumption and service data from DHIS2 "
+            "and stores it in the configured database."
+        ),
+        status_code=status.HTTP_201_CREATED,
+    )
+    async def download_historical_data(
+            request: Request,
+            start_date: date = (date.today() - timedelta(days=30)).strftime("%Y-%m-%d"),
+            end_date: date = date.today().strftime("%Y-%m-%d"),
+    ) -> APIResponse:
+        trace_id = request.state.trace_id
+        message = await asyncify(extract_and_store_historical_data)(trace_id, start_date, end_date)
+        return message
+
+
+    return router

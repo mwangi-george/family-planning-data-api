@@ -1,15 +1,15 @@
 import os
-from typing import Optional
-
-import requests
 import polars as pl
+from typing import Optional
 from dotenv import load_dotenv
 from loguru import logger
+
+from services.helpers import make_api_call
 
 
 def get_data_elements(base_url: str, username: str, password: str) -> Optional[pl.DataFrame]:
     """
-    Fetch data elements metadata from DHIS2 and return it as a Polars DataFrame.
+    Fetch data elements data_extraction from DHIS2 and return it as a Polars DataFrame.
 
     Parameters
     ----------
@@ -35,17 +35,8 @@ def get_data_elements(base_url: str, username: str, password: str) -> Optional[p
 
     logger.info(f"Requesting data elements from DHIS2: {url}")
 
-    try:
-        response = requests.get(url, auth=(username, password))
-    except requests.RequestException as e:
-        raise RuntimeError(f"Network error while contacting DHIS2: {e}")
-
-    # DHIS2 should return 200 OK; anything else is an error
-    if response.status_code != 200:
-        raise RuntimeError(
-            f"Failed to fetch data elements. Status: {response.status_code}, "
-            f"Response: {response.text}"
-        )
+    # API request
+    response = make_api_call(url, username, password)
 
     logger.success("Data elements successfully retrieved from DHIS2.")
 

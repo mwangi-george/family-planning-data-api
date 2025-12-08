@@ -1,12 +1,10 @@
 import os
-from typing import Optional
-
-import requests
 import polars as pl
+from typing import Optional
 from dotenv import load_dotenv
 from loguru import logger
 
-from services.metadata_scripts.helpers import make_orgunits_hierarchy
+from services.helpers import make_orgunits_hierarchy, make_api_call
 
 
 def get_organisation_units(base_url: str, username: str, password: str) -> Optional[pl.DataFrame]:
@@ -42,15 +40,7 @@ def get_organisation_units(base_url: str, username: str, password: str) -> Optio
     logger.info(f"Requesting organisation units from DHIS2: {url}")
 
     # --- API request ---
-    try:
-        response = requests.get(url, auth=(username, password))
-    except requests.RequestException as e:
-        raise RuntimeError(f"Network error while requesting organisation units: {e}")
-
-    if response.status_code != 200:
-        raise RuntimeError(
-            f"Failed to retrieve organisation units. Status: {response.status_code} | Response: {response.text}"
-        )
+    response = make_api_call(url, username, password)
 
     logger.success("Organisation units successfully retrieved from DHIS2.")
 
