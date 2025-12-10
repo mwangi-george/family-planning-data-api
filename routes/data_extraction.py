@@ -17,7 +17,7 @@ def create_data_extraction_router() -> APIRouter:
     @router.post(
         path="/download-metadata",
         summary="Download and store DHIS2 metadata",
-        status_code=status.HTTP_201_CREATED,
+        status_code=status.HTTP_202_ACCEPTED,
         description=(
             "Downloads DHIS2 metadata (indicators, data elements, and organisation units) "
             "and stores it in the configured database."
@@ -37,7 +37,7 @@ def create_data_extraction_router() -> APIRouter:
             "Downloads historical consumption and service data from DHIS2 "
             "and stores it in the configured database."
         ),
-        status_code=status.HTTP_201_CREATED,
+        status_code=status.HTTP_202_ACCEPTED,
     )
     async def download_historical_data(
             request: Request,

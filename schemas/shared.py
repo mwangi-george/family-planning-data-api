@@ -3,6 +3,15 @@ from pydantic import BaseModel, Field
 
 
 class APIResponse(BaseModel):
+    """
+    Standard schema for API responses
+
+    Attributes:
+        success (bool): Whether the API response was successful
+        message (str): The description of the API response
+        data (Any): The response data
+        trace_id (str): The trace id of the API request
+    """
 
     success: bool = Field(..., description="Indicates if the request was successful")
     message: str | None = Field(None, description="Human-readable success/error message")

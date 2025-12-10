@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from core.logging_config import setup_logging
 from core.middlewares import TraceIDMiddleware
-from routes import metadata_router
+from routes import metadata_router, data_cleaning_router
 
 
 setup_logging()
@@ -13,5 +13,6 @@ app = FastAPI(
 
 app.add_middleware(TraceIDMiddleware)
 app.include_router(metadata_router())
+app.include_router(data_cleaning_router())
 
 
