@@ -42,19 +42,13 @@ def extract_and_store_dhis2_metadata(trace_id: str) -> APIResponse:
 
         # --- Download metadata from DHIS2 ---
         logger.info("Downloading organisation units...")
-        organisation_units_df = get_organisation_units(
-            DHIS2_BASE_URL, DHIS2_USERNAME, DHIS2_PASSWORD
-        )
+        organisation_units_df = get_organisation_units(DHIS2_BASE_URL, DHIS2_USERNAME, DHIS2_PASSWORD)
 
         logger.info("Downloading data elements...")
-        data_elements_df = get_data_elements(
-            DHIS2_BASE_URL, DHIS2_USERNAME, DHIS2_PASSWORD
-        )
+        data_elements_df = get_data_elements(DHIS2_BASE_URL, DHIS2_USERNAME, DHIS2_PASSWORD)
 
         logger.info("Downloading indicators...")
-        indicators_df = get_indicators(
-            DHIS2_BASE_URL, DHIS2_USERNAME, DHIS2_PASSWORD
-        )
+        indicators_df = get_indicators(DHIS2_BASE_URL, DHIS2_USERNAME, DHIS2_PASSWORD)
 
         # --- Measure extraction time ---
         elapsed = time.time() - start_time
