@@ -9,7 +9,7 @@ from services.helpers import make_api_call
 
 def get_indicators(base_url: str, username: str, password: str) -> Optional[pl.DataFrame]:
     """
-    Fetch DHIS2 indicators data_extraction and return it as a Polars DataFrame.
+    Fetch DHIS2 indicators and return it as a Polars DataFrame.
 
     Parameters
     ----------

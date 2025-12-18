@@ -9,10 +9,10 @@ from services.helpers import make_api_call
 
 def get_data_elements(base_url: str, username: str, password: str) -> Optional[pl.DataFrame]:
     """
-    Fetch data elements data_extraction from DHIS2 and return it as a Polars DataFrame.
+    Fetch data elements from DHIS2 and return it as a Polars DataFrame.
 
     Parameters
-    ----------
+    ---------
     base_url : str
         Base URL of the DHIS2 instance (e.g., "https://play.dhis2.org/dev").
     username : str
