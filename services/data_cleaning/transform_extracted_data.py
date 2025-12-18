@@ -1,5 +1,4 @@
 import gc
-from typing import Dict
 
 import polars as pl
 from loguru import logger
@@ -58,7 +57,7 @@ class FamilyPlanningDataTransformationPipeline:
         self.db_url = env_config.FP_DB_URL  # The database connection URI
         self.request_trace_id = request_trace_id
 
-    def _extract_data(self) -> Dict[str, pl.DataFrame]:
+    def _extract_data(self) -> dict[str, pl.DataFrame]:
         """
         Extracts raw datasets from the database.
 
