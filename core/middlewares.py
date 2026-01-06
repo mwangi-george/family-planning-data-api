@@ -3,6 +3,7 @@ from typing import Callable
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request, Response
 
+
 from core.context import trace_id_ctx
 
 class TraceIDMiddleware(BaseHTTPMiddleware):
@@ -17,6 +18,7 @@ class TraceIDMiddleware(BaseHTTPMiddleware):
        logging, and downstream processes.
     3. Injects the same trace ID into the response headers as `X-Trace-ID`, allowing clients
        to reference it when reporting issues or correlating logs.
+    4. Also stores the trace ID into the app context for use in the app logger
     """
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
         trace_id = shortuuid.uuid()
