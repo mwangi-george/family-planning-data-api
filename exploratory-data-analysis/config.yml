@@ -1,0 +1,9 @@
+default:
+  DB_NAME: "fp_commodities_db"
+  HOST: "localhost"
+  PORT: "5432"
+  USERNAME: "postgres"
+  PASSWORD: "postgres"
+
+production:
+  inherits: default
