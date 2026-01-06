@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status, Request
 from asyncer import asyncify
 
-from schemas.shared import APIResponse
-from services.data_cleaning.transform_extracted_data import FamilyPlanningDataTransformationPipeline
+from backend.schemas.shared import APIResponse
+from backend.services.data_cleaning.transform_extracted_data import FamilyPlanningDataTransformationPipeline
 
 
 def create_data_cleaning_router() -> APIRouter:

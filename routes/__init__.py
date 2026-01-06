@@ -1,2 +1,0 @@
-from routes.data_extraction import create_data_extraction_router as metadata_router
-from routes.data_cleaning import create_data_cleaning_router as data_cleaning_router

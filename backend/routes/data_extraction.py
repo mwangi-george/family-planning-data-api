@@ -3,9 +3,9 @@ from datetime import date, timedelta
 from fastapi import APIRouter, status, Request, BackgroundTasks
 from loguru import logger
 
-from schemas.shared import APIResponse
-from services.data_extraction.download_metadata import extract_and_store_dhis2_metadata_in_bg
-from services.data_extraction.download_historical_data import extract_and_store_historical_data_in_bg
+from backend.schemas.shared import APIResponse
+from backend.services.data_extraction.download_metadata import extract_and_store_dhis2_metadata_in_bg
+from backend.services.data_extraction.download_historical_data import extract_and_store_historical_data_in_bg
 
 def create_data_extraction_router() -> APIRouter:
     """

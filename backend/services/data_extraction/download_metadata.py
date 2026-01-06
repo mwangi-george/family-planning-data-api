@@ -3,12 +3,12 @@ import time
 from fastapi import BackgroundTasks
 from loguru import logger
 
-from core.env_config import env_config
-from services.data_extraction.get_indicators import get_indicators
-from services.data_extraction.get_data_elements import get_data_elements
-from services.data_extraction.get_organisation_units import get_organisation_units
-from services.helpers import save_df_to_db
-from schemas.shared import APIResponse
+from backend.core.env_config import env_config
+from backend.services.data_extraction.get_indicators import get_indicators
+from backend.services.data_extraction.get_data_elements import get_data_elements
+from backend.services.data_extraction.get_organisation_units import get_organisation_units
+from backend.services.helpers import save_df_to_db
+from backend.schemas.shared import APIResponse
 
 
 def extract_and_store_dhis2_metadata(trace_id: str) -> APIResponse:

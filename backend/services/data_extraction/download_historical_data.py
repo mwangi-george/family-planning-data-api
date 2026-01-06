@@ -7,9 +7,9 @@ from fastapi import BackgroundTasks
 from loguru import logger
 from dotenv import load_dotenv
 
-from core.env_config import env_config as config
-from schemas.shared import APIResponse
-from services.helpers import (
+from backend.core.env_config import env_config as config
+from backend.schemas.shared import APIResponse
+from backend.services.helpers import (
     get_org_units_ids,
     get_fp_data_elements_ids,
     extract_historical_data_from_khis,

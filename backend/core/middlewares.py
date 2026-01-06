@@ -4,7 +4,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request, Response
 
 
-from core.context import trace_id_ctx
+from backend.core.context import trace_id_ctx
 
 class TraceIDMiddleware(BaseHTTPMiddleware):
     """

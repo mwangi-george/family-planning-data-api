@@ -4,7 +4,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from loguru import logger
 
-from services.helpers import make_api_call
+from backend.services.helpers import make_api_call
 
 
 def get_data_elements(base_url: str, username: str, password: str) -> Optional[pl.DataFrame]:

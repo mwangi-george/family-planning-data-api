@@ -4,7 +4,7 @@ from loguru import logger
 from dotenv import load_dotenv
 from typing import Optional
 
-from services.helpers import make_api_call
+from backend.services.helpers import make_api_call
 
 
 def get_indicators(base_url: str, username: str, password: str) -> Optional[pl.DataFrame]:

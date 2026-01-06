@@ -1,7 +1,7 @@
 from loguru import logger
 import sys
 from pathlib import Path
-from core.context import trace_id_ctx
+from backend.core.context import trace_id_ctx
 
 LOG_DIR = Path("logs")
 LOG_DIR.mkdir(exist_ok=True)
